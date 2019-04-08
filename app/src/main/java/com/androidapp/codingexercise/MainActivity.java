@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
 
@@ -72,5 +73,14 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         getRepos(userInput);
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(recyclerView.getVisibility()== View.VISIBLE){
+            recyclerView.setVisibility(View.INVISIBLE);
+            return;
+        }
+        super.onBackPressed();
     }
 }

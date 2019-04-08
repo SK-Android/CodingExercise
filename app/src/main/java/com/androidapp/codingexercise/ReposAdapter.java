@@ -70,4 +70,5 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
             stars = itemView.findViewById(R.id.stars);
         }
     }
+
 }
