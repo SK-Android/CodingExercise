@@ -18,25 +18,33 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements android.support.v7.widget.SearchView.OnQueryTextListener {
 
     ReposAdapter reposAdapter;
     RecyclerView recyclerView;
+
+    private GithubViewModel githubViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
        // getRepos("android");
 
+        githubViewModel = new GithubViewModel(
+                new GithubInteractorImpl(), AndroidSchedulers.mainThread());
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void getRepos(String userInput) {
-        ApiInterface apiInterface = ApiInterface.retrofit.create(ApiInterface.class);
-        apiInterface.getRepos("android")
+
+        githubViewModel.search(userInput)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Model>() {
@@ -48,16 +56,18 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                     @Override
                     public void onNext(Model model) {
 
+                        reposAdapter = new ReposAdapter(model.getItems(),getBaseContext());
+                        //Log.i("MainActivity", model.getItems().toString());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.e("MainACtivity",e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-
+                        recyclerView.setAdapter(reposAdapter);
                     }
                 });
 
