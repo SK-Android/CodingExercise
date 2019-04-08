@@ -14,6 +14,10 @@ import android.widget.SearchView;
 import com.androidapp.codingexercise.model.Model;
 import com.androidapp.codingexercise.service.ApiInterface;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,24 +36,31 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     private void getRepos(String userInput) {
         ApiInterface apiInterface = ApiInterface.retrofit.create(ApiInterface.class);
+        apiInterface.getRepos("android")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Model>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        Call<Model> call = apiInterface.getRepos(userInput);
-        call.enqueue(new Callback<Model>() {
-            @Override
-            public void onResponse(Call<Model> call, Response<Model> response) {
-                if(response.isSuccessful()){
-                    Log.i("MainActivity", response.body().getItems().toString());
-                    reposAdapter = new ReposAdapter(response.body().getItems(), getApplicationContext());
-                    recyclerView.setAdapter(reposAdapter);
+                    }
 
-                }
-            }
+                    @Override
+                    public void onNext(Model model) {
 
-            @Override
-            public void onFailure(Call<Model> call, Throwable t) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     @Override
