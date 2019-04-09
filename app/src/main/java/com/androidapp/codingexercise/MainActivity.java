@@ -9,10 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 
 import com.androidapp.codingexercise.model.Model;
 import com.androidapp.codingexercise.service.ApiInterface;
+import com.github.florent37.tutoshowcase.TutoShowcase;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         githubViewModel = new GithubViewModel(
                 new GithubInteractorImpl(), AndroidSchedulers.mainThread());
 
+
     }
+
 
 
 
@@ -87,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     public boolean onQueryTextChange(String newText) {
         String userInput = newText.toLowerCase();
         recyclerView = findViewById(R.id.main_rv);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         getRepos(userInput);
         return false;

@@ -15,4 +15,5 @@ public interface ApiInterface {
     //?q=android
     @GET("search/repositories")
     Observable<Model> getRepos(@Query("q") String searchString);
+
 }
