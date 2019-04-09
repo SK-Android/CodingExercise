@@ -46,7 +46,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
         viewHolder.repoName.setText(itemList.get(i).getFullName());
         viewHolder.desciption.setText(itemList.get(i).getDescription());
-        //viewHolder.stars.setText(itemList.get(i).get);
+        //viewHolder.stars.setText(itemList.get(i).getScore().toString());
     }
 
     @Override

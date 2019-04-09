@@ -37,10 +37,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+
 
     private void getRepos(String userInput) {
 
