@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
                     @Override
                     public void onNext(Model model) {
-
                         reposAdapter = new ReposAdapter(model.getItems(),getBaseContext());
                         //Log.i("MainActivity", model.getItems().toString());
                     }
