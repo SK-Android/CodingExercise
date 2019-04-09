@@ -14,7 +14,6 @@ import com.androidapp.codingexercise.model.Model;
 import com.androidapp.codingexercise.model.Owner;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
 
 import java.util.List;
 

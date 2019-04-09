@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
