@@ -13,9 +13,6 @@ import android.widget.Toast;
 
 
 import com.androidapp.codingexercise.model.Model;
-import com.androidapp.codingexercise.service.ApiInterface;
-import com.github.florent37.tutoshowcase.TutoShowcase;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
