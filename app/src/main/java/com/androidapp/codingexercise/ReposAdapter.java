@@ -75,11 +75,14 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
 
+
                 activity.getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out)
                         .add(R.id.fragment_container, detailFragment)
                         .addToBackStack(null)
                         .commit();
+
             }
         });
 

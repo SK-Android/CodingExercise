@@ -1,5 +1,8 @@
 package com.androidapp.codingexercise;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,11 +11,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 
 import com.androidapp.codingexercise.model.Model;
+import com.androidapp.codingexercise.utils.NetworkHelper;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -22,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     ReposAdapter reposAdapter;
     RecyclerView recyclerView;
-
+    int flag = 0;
+    private boolean networkOk;
     private GithubViewModel githubViewModel;
 
     @Override
@@ -31,16 +38,35 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         setContentView(R.layout.activity_main);
        // getRepos("android");
 
+        recyclerView = findViewById(R.id.main_rv);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        int resId = R.anim.layout_animation_slide_from_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+        recyclerView.setLayoutAnimation(animation);
+
         githubViewModel = new GithubViewModel(
                 new GithubInteractorImpl(), AndroidSchedulers.mainThread());
+
+
+        networkOk = NetworkHelper.hasNetworkAccess(this);
+        if (networkOk == true) {
+
+            Toast.makeText(this, "Network Ok", Toast.LENGTH_SHORT).show();
+
+            if(flag == 0){
+                getRepos("android", flag);
+            }
+
+        } else {
+          displayNoNetworkDialog();
+        }
 
 
     }
 
 
-
-
-    private void getRepos(String userInput) {
+    private void getRepos(String userInput, int flag) {
 
         githubViewModel.search(userInput)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -53,8 +79,13 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
                     @Override
                     public void onNext(Model model) {
+
                         reposAdapter = new ReposAdapter(model.getItems(),getBaseContext());
                         //Log.i("MainActivity", model.getItems().toString());
+                        if(flag == 1){
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                        recyclerView.scheduleLayoutAnimation();
                     }
 
                     @Override
@@ -69,6 +100,38 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                 });
 
     }
+
+    private void runLayoutAnimation(RecyclerView recyclerView) {
+
+            final Context context = recyclerView.getContext();
+            final LayoutAnimationController controller =
+                    AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_slide_from_bottom);
+
+            recyclerView.setLayoutAnimation(controller);
+        }
+
+
+
+    private void displayNoNetworkDialog() {
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+            alertDialog.setTitle("Info");
+            alertDialog.setMessage("Internet not available, Cross check your internet connectivity and try again");
+            alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.d("MainActivity", "Show Dialog: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,10 +150,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public boolean onQueryTextChange(String newText) {
         String userInput = newText.toLowerCase();
-        recyclerView = findViewById(R.id.main_rv);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        getRepos(userInput);
+        flag = 1;
+        runLayoutAnimation(recyclerView);
+        getRepos(userInput,flag);
         return false;
     }
 
