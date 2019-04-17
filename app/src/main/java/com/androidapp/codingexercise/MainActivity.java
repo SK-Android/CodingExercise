@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private void getRepos(String userInput, int flag) {
 
         githubViewModel.search(userInput)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Model>() {
                     @Override
                     public void onSubscribe(Disposable d) {

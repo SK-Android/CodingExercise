@@ -20,4 +20,5 @@ public class GithubViewModel {
     public Observable<Model> search(String search){
         return interactor.search(search).observeOn(scheduler);
     }
+
 }
